@@ -1,5 +1,9 @@
 #!/bin/bash
 set -e
+
+echo -n "First, we should define a root password :"
+passwd
+
 apt-get update -y
 apt-get install -y apt-transport-https ca-certificates sudo 
 
@@ -17,4 +21,8 @@ if ! [ -x "$(command -v ansible)" ]; then
     sudo apt-get --assume-yes install git
 fi
 
-ansible-playbook ubuntu.yml -i hosts -vvv
+ansible-playbook ubuntu.yml -i hosts
+
+echo -n "Finaly, we should define the user password :"
+username=$(cat vars.yml  | grep username | cut -d '"' -f2)
+passwd $username
